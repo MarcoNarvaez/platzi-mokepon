@@ -17,7 +17,7 @@ function iniciarJuego() {
     botonTierra.addEventListener('click', ataqueTierra)
 
     let botonReiniciar = document.getElementById('boton-reiniciar')
-    botonReiniciar.addEventListener('click')
+    botonReiniciar.addEventListener('click', reiniciar)
 }
 
 function seleccionarMascotaJugador() {
