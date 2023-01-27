@@ -9,24 +9,36 @@
     <link rel="stylesheet" href="/mokepon/styles.css">
 </head>
 <body>
-    <h1 class="title">MOKEPON</h1>
-
     <section id="seleccionar-mascota">
-        <h2>Elige tu mascota:</h2>
+        <h1 class="titulo">Mokepon</h1>
 
-        <label for="hipodoge">Hipodoge</label>
-        <input type="radio" name="mascota" id="hipodoge" />
-        
-        <label for="capipepo">Capipepo</label>
-        <input type="radio" name="mascota" id="capipepo" />
-        
-        <label for="ratigueya">Ratigueya</label>
-        <input type="radio" name="mascota" id="ratigueya" />
+        <h2 class="subtitulo">Elige tu mascota:</h2>
 
-        <button id="boton-mascota">Seleccionar</button>
+        <div class="tarjetas">
+            <label class="tarjeta-mokepon" for="hipodoge">
+                <p>Hipodoge</p>
+                <img src="/assets/hipodoge.png" alt="hipodoge">
+            </label>
+            <input type="radio" name="mascota" id="hipodoge" />
+        
+            <label class="tarjeta-mokepon" for="capipepo">
+                <p>Capipepo</p>
+                <img src="/assets/capipepo.png" alt="capipepo">
+            </label>
+            <input type="radio" name="mascota" id="capipepo" />
+        
+            <label class="tarjeta-mokepon" for="ratigueya">
+                <p>Ratigueya</p>
+                <img src="/assets/ratigueya.png" alt="ratigueya">
+            </label>
+            <input type="radio" name="mascota" id="ratigueya" />
+        </div>
+
+        <button id="boton-mascota">Continuar</button>
     </section>
 
     <section id="seleccionar-ataque">
+        <h1 class="title">MOKEPON</h1>
         <h2>Elige tu ataque:</h2>
 
         <p>Tu mascota <span id="mascota-jugador"></span> tiene <span id="vidas-jugador">3</span> vidas</p>
