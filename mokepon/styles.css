@@ -75,3 +75,13 @@ input {
     width: 50px;
     height: 50px;
 }
+
+#mensajes {
+    width: 200px;
+    background-color: #8EA7E9;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+}
