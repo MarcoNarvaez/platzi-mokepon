@@ -92,3 +92,14 @@ input {
     color: #8EA7E9;
     font-family: 'Fredoka One', cursive;
 }
+
+.ataques {
+    display: grid;
+    grid-template-columns: 100px 100px;
+}
+
+@media (max-width: 360px) {
+    .tarjetas {
+        flex-direction: column;
+    }
+}
