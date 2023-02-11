@@ -17,24 +17,35 @@ const ataqueJugadorMensaje = document.getElementById('ataque-jugador')
 const ataqueEnemigoMensaje = document.getElementById('ataque-enemigo')
 
 const sectionMensajes = document.getElementById('resultado')
+const ataquesDelJugador = document.getElementById('ataques-del-jugador')
+const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo')
 const contenedorTarjetas = document.getElementById('contenedor-tarjetas')
-
 const contenedorAtaques = document.getElementById('contenedor-ataques')
 
+const sectionVerMapa = document.getElementById('ver-mapa')
+const mapa = document.getElementById('mapa')
+
 let mokepones = []
-let ataqueJugador
-let ataqueEnemigo
-let opccionDeMokepones
+let ataqueEnemigo = []
+let ataquesJugador = []
+let indexAtaqueJugador
+let indexAtaqueEnemigo
+let opcionDeMokepones
 let inputHipodoge
 let inputCapipepo
 let inputRatigueya
 let mascotaJugador
 let ataquesMokepon
+let ataquesMokeponEnemigo
 let botonFuego
 let botonAgua
 let botonTierra
+let botones = []
+let victoriasJugador = 0
+let victoriasEnemigo = 0
 let vidasJugador = 3
 let vidasEnemigo = 3
+let lienzo = mapa.getContext('2d')
 
 class Mokepon {
     constructor(nombre, imagen, vida) {
@@ -80,16 +91,17 @@ mokepones.push(hipodoge, capipepo, ratigueya)
 function iniciarJuego() {
 
     sectionSeleccionarAtaque.style.display = 'none'
+    sectionVerMapa.style.display = 'none'
 
     mokepones.forEach((mokepon) => {
-        opccionDeMokepones = `
+        opcionDeMokepones = `
         <input type="radio" name="mascota" id="${mokepon.nombre}" />
         <label class="tarjeta-mokepon" for="${mokepon.nombre}">
             <p>${mokepon.nombre}</p>
             <img src="${mokepon.imagen}" alt="${mokepon.nombre}">
         </label>
         `
-        contenedorTarjetas.innerHTML += opccionDeMokepones
+        contenedorTarjetas.innerHTML += opcionDeMokepones
 
         inputHipodoge = document.getElementById('Hipodoge')
         inputCapipepo = document.getElementById('Capipepo')
@@ -105,7 +117,17 @@ function iniciarJuego() {
 function seleccionarMascotaJugador() {
     
     sectionSeleccionarMascota.style.display = 'none'
-    sectionSeleccionarAtaque.style.display = 'flex'
+    //sectionSeleccionarAtaque.style.display = 'flex'
+    sectionVerMapa.style.display = 'flex'
+    let imagenCapipepo = new Image()
+    imagenCapipepo = capipepo.imagen
+    lienzo.drawImage(
+        imagenCapipepo,
+        20,
+        40,
+        100,
+        100
+    )
 
     if (inputHipodoge.checked) {
         spanMascotaJugador.innerHTML = inputHipodoge.id
@@ -137,7 +159,7 @@ function extraerAtaques(mascotaJugador) {
 function mostrarAtaques(ataques) {
     ataques.forEach((ataque) => {
         ataquesMokepon = `
-        <button id=${ataque.id} class="boton-de-ataque">${ataque.nombre}</button>
+        <button id=${ataque.id} class="boton-de-ataque BAtaque">${ataque.nombre}</button>
         `
         contenedorAtaques.innerHTML += ataquesMokepon
     })
@@ -145,77 +167,105 @@ function mostrarAtaques(ataques) {
     botonFuego = document.getElementById('boton-fuego')
     botonAgua = document.getElementById('boton-fuego')
     botonTierra = document.getElementById('boton-fuego')
-    
-    botonFuego.addEventListener('click', ataqueFuego)
-    botonAgua.addEventListener('click', ataqueAgua)
-    botonTierra.addEventListener('click', ataqueTierra)
+    botones = document.querySelectorAll('.BAtaque')
+}
+
+function secuenciaAtaques() {
+    botones.forEach((boton) => {
+        boton.addEventListener('click', (e) => {
+            if (e.target.textContent === '🔥') {
+                ataquesJugador.push('FUEGO')
+                console.log(ataquesJugador);
+                boton.style.background = '#112f58'
+                boton.disabled = true
+            } else if (e.target.textContent === '💧') {
+                ataquesJugador.push('AGUA')
+                console.log(ataquesJugador);
+                boton.style.background = '#112f58'
+                boton.disabled = true
+            } else {
+                ataquesJugador.push('TIERRA')
+                console.log(ataquesJugador);
+                boton.style.background = '#112f58'
+                boton.disabled = true
+            }
+            ataqueAleatorioEnemigo()
+        })
+    })
 }
 
 function seleccionarMascotaEnemigo() {
     let mascotaAleatorio = aleatorio(0, mokepones.length - 1)
 
     spanMascotaEnemigo.innerHTML = mokepones[mascotaAleatorio].nombre
-}
-
-function ataqueFuego() {
-    ataqueJugador = 'Fuego'
-    ataqueAleatorioEnemigo()
-}
-
-function ataqueAgua() {
-    ataqueJugador = 'Agua'
-    ataqueAleatorioEnemigo()
-}
-
-function ataqueTierra() {
-    ataqueJugador = 'Tierra'
-    ataqueAleatorioEnemigo()
+    ataquesMokeponEnemigo = mokepones[mascotaAleatorio].ataques
+    secuenciaAtaques()
 }
 
 function ataqueAleatorioEnemigo() {
-    let ataqueAleatorio = aleatorio(1, 3)
+    let ataqueAleatorio = aleatorio(0, ataquesMokeponEnemigo.length - 1)
 
-    if (ataqueAleatorio == 1) {
-        ataqueEnemigo = 'Fuego'
-    } else if (ataqueAleatorio == 2) {
-        ataqueEnemigo = 'Agua'
+    if (ataqueAleatorio == 0 || ataqueAleatorio == 1) {
+        ataqueEnemigo.push('FUEGO')
+    } else if (ataqueAleatorio == 3 || ataqueAleatorio == 4) {
+        ataqueEnemigo.push('AGUA')
     } else {
-        ataqueEnemigo = 'Tierra'
+        ataqueEnemigo.push('TIERRA')
     }
+    console.log(ataqueEnemigo);
+    iniciarPelea()
+}
 
-    combate()
+function iniciarPelea() {
+    if (ataquesJugador.length == 5) {
+        combate()
+    }    
+}
+
+function indexAmbosOponentes(jugador, enemigo) {
+    indexAtaqueJugador = ataquesJugador[jugador]
+    indexAtaqueEnemigo = ataqueEnemigo[enemigo]
 }
 
 function combate() {
 
-    if (ataqueEnemigo == ataqueJugador) {
-        crearMensaje('Empate')
-    } else if (ataqueJugador == 'Fuego' && ataqueEnemigo == 'Tierra') {
-        crearMensaje('Ganaste')
-        vidasEnemigo--
-        spanVidasEnemigo.innerHTML = vidasEnemigo
-    } else if (ataqueJugador == 'Agua' && ataqueEnemigo == 'Fuego') {
-        crearMensaje('Ganaste')
-        vidasEnemigo--
-        spanVidasEnemigo.innerHTML = vidasEnemigo
-    } else if (ataqueJugador == 'Tierra' && ataqueEnemigo == 'Agua') {
-        crearMensaje('Ganaste')
-        vidasEnemigo--
-        spanVidasEnemigo.innerHTML = vidasEnemigo
-    } else {
-        crearMensaje('Perdiste')
-        vidasJugador--
-        spanVidasJugador.innerHTML = vidasJugador
+    for (let i = 0; i< ataquesJugador.length; i++) {
+        if (ataquesJugador[i] === ataqueEnemigo[i]) {
+            indexAmbosOponentes(i, i)
+            crearMensaje('Empate')
+        } else if (ataquesJugador[i] === 'FUEGO' && ataqueEnemigo[i] === 'TIERRA') {
+            indexAmbosOponentes(i, i)
+            crearMensaje('GANASTE')
+            victoriasJugador++
+            spanVidasJugador.innerHTML = victoriasJugador
+        } else if (ataquesJugador[i] === 'AGUA' && ataqueEnemigo[i] === 'FUEGO') {
+            indexAmbosOponentes(i, i)
+            crearMensaje('GANASTE')
+            victoriasJugador++
+            spanVidasJugador.innerHTML = victoriasJugador
+        } else if(ataquesJugador[i] === 'TIERRA' && ataqueEnemigo[i] === 'AGUA') {
+            indexAmbosOponentes(i, i)
+            crearMensaje('GANASTE')
+            victoriasJugador++
+            spanVidasJugador = victoriasJugador
+        } else {
+            indexAmbosOponentes(i, i)
+            crearMensaje('PERDISTE')
+            victoriasEnemigo++
+            spanVidasEnemigo = victoriasEnemigo
+        }
     }
 
-    revisarVidas()
+    revisarVictorias()
 }
 
-function revisarVidas() {
-    if (vidasEnemigo == 0) {
-        crearMensajeFinal('Ganaste!!!')
-    } else if (vidasJugador == 0) {
-        crearMensajeFinal('Perdiste :(')
+function revisarVictorias() {
+    if (victoriasJugador === victoriasEnemigo) {
+        crearMensajeFinal('Empate!')
+    } else if (victoriasJugador > victoriasEnemigo) {
+        crearMensajeFinal('Ganaste!')
+    } else {
+        crearMensajeFinal('Perdiste!')
     }
 }
 
@@ -224,8 +274,8 @@ function crearMensaje(resultado) {
     let nuevoAtaqueEnemigo = document.createElement('p')
 
     resultadoMensaje.innerHTML = resultado
-    nuevoAtaqueJugador.innerHTML = ataqueJugador
-    nuevoAtaqueEnemigo.innerHTML = ataqueEnemigo
+    nuevoAtaqueJugador.innerHTML = indexAtaqueJugador
+    nuevoAtaqueEnemigo.innerHTML = indexAtaqueEnemigo
     
     ataqueJugadorMensaje.appendChild(nuevoAtaqueJugador)
     ataqueEnemigoMensaje.appendChild(nuevoAtaqueEnemigo)
@@ -234,10 +284,6 @@ function crearMensaje(resultado) {
 function crearMensajeFinal(resultadoFinal) {
     
     sectionMensajes.innerHTML = resultadoFinal
-
-    botonFuego.disabled = true
-    botonAgua.disabled = true
-    botonTierra.disabled = true
     sectionReiniciar.style.display = 'block'
 }
 
